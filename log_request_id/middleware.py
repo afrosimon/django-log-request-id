@@ -19,6 +19,7 @@ class RequestIDMiddleware(MiddlewareMixin):
         request_id = self._get_request_id(request)
         local.request_id = request_id
         request.id = request_id
+        logger.info('[RequestIDMiddleware] Starting to log for request ID {}'.format(request_id))
 
     def process_response(self, request, response):
         if getattr(settings, REQUEST_ID_RESPONSE_HEADER_SETTING, False) and getattr(request, 'id', None):
@@ -42,7 +43,7 @@ class RequestIDMiddleware(MiddlewareMixin):
             args += (user_id,)
 
         logger.info(message, *args)
-        
+
         try:
             del local.request_id
         except AttributeError:
